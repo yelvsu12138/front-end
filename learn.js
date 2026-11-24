@@ -102,3 +102,51 @@ function throttle(fn,delay){
 }
 
 //02 ES6+
+//1.解构赋值 按照模式匹配 快速取值；数组解构 对象解构 字符串解构 函数参数解构
+//2.模板字符串 ` `
+function tag(strs, ...values) {
+  console.log(strs) // 固定字符串数组
+  console.log(values) // ${}插值的结果数组
+}
+const a = 10
+const b = 20
+tag`数字${a} 和 ${b}`//标签模板字符串
+//3.Set去重 Map 键可以是对象 普通对象键变成'[object Object]'
+//4.class与继承 static属于类本身 不属于实例 get/set访问器 extends 子类构造constructor必须先调用super（）才能用this
+//5.模块化
+//6.可选链和空值合并
+//.flat flatMap
+
+//04 HTTP与网络
+//1.HTTP版本对比
+/* 1.0 一次请求一次tcp
+1.1 Keep-Alive长连接 缓存头完善
+2.0 多路复用 一个连接并行多个请求
+3.0 QUIC/UOP 弱网更快 */
+//2.状态码
+/* 200 正常
+301/302 短链跳转 未登录跳登录页
+304 静态资源没变 用本地缓存
+400 参数校验失败
+401 未登录或token过期
+403 登录了但无权限
+404 路径或资源不存在
+500 服务端崩了 */
+//3.get和post
+/* get 参数在url 可被缓存收藏 不适合敏感大数据
+post 体里带json 表单提交 创建资源 */
+//4.HTTPS简化流程
+/* 1.客户端 支持的加密套件
+2.服务端 证书即公钥
+3.客户端验证证书是否可信
+4.双方协商出会话密钥 对称加密 速度快
+5.之后数据用会话密钥加密传输
+HTTPS=HTTP+TLS防窃听防篡改 */
+
+//05 css
+//1.盒子模型
+//2.BFC 解决margin塌陷 清除浮动 
+/* 清除浮动：父级 overflow: hidden 
+或伪元素 .clearfix::after { content:''; display:block; clear:both; } */
+//3.垂直水平居中
+//4.css权重
