@@ -150,3 +150,79 @@ HTTPS=HTTP+TLS防窃听防篡改 */
 或伪元素 .clearfix::after { content:''; display:block; clear:both; } */
 //3.垂直水平居中
 //4.css权重
+
+//03 浏览器原理
+//1.输入url到页面展示
+//DNS解析-> TCP三次握手-> TLS -> HTTP -> 解析HTML CSS -> 渲染树 -> 布局 -> 绘制 -> 合成
+//2.回流和重绘
+//回流：几何布局变化 宽高尺寸位置变化 display：none
+//重绘：颜色背景 visibility
+//合成（都不触发）：transform opacity
+//3.强缓存与协商缓存
+//强缓存 读磁盘文件 不发请求 用户读不到新文件
+//协商缓存 304或200 发请求 不发传输字节
+//4.跨域
+//同源策略 协议域名端口都相同
+//跨域发请求 操作执行 返回没授权报错 服务器加响应头解决；服务器不处理options会报跨域
+//5.本地存储选型 
+/* cookie 登录带token
+localStorage 主题语言偏好
+sessionStorage 草稿 关标签就没
+indexedDB 离线大量结构化数据 */
+
+//06 vue2
+//1.响应式原理
+//vue2如何劫持数据
+function defineReactive(obj, key, val){//定义一个函数 用来给对象的某个属性装上get set 变成响应式
+    //obj要处理的对象 key属性名 val属性原本的值
+    const dep = [];//依赖收集器 数组里面存Watcher 谁在用这个属性谁就放进来
+    Object.defineProperty(obj, key, {//js自带的api 专门给对象的某个属性设置自定义的读取，修改逻辑 从这里开始给obj[key]装上监控
+        get(){//读取函数 当你去读取这个属性 自动执行get
+            if(Watcher.active) dep.push(Watcher.active);//如果有一个Watcher在读取数据 这个Watcher加到dep数组 记录数组被谁用了
+            return val;//返回值给模板或代码
+        },
+        set(newVal){//修改函数 修改属性值自动执行set
+            if(newVal === val)return;//如果值不变 啥也不干
+            val = newVal;//替换新值
+            dep.forEach((w)=>w.update());//更新视图
+        },
+    })
+
+}
+//局限 vue2默认监听不了 要用Vue.set
+const vm = { user: { name: 'a'} };
+vm.user.age = 18;//对象新增属性
+vm.items[0] = 'new';//新增数组下标
+//2.组件通信
+//3.v-for和v-if不要写在一起
+/* v-for比v-if优先级高 会全部循环再渲染 性能浪费
+解决方法：1.先过滤数组 再循环 2.外层套一层标签如template v-if放外面 */
+//4.key为什么不能用index
+/* 列表 [A, B, C]，在头插入 X → [X, A, B, C]
+index 全变：0→A 变成 0→X，Vue 可能复用错 DOM，输入框内容串行
+用唯一 id：Vue 知道只是「移动/新增」节点 */
+//5.compute和watch
+//6.nextTick
+//7.vuex数据流
+//8.路由守卫
+//全局守卫 beforeEach
+
+//09.性能优化
+//1.首屏优化 checklist
+//2.虚拟列表
+//3.减少回流
+//4.打包瘦身
+//5.ssr服务端渲染 vue是Nuxt3 react是Next.js 这两个默认是csr客户端渲染
+/* 解决spa首屏白屏 搜索引擎抓不到内容 思路是服务器渲染完整html 客户端激活
+fcp会优化
+ssr ssg csr对比
+hydration ：
+服务端把组件树渲染成html字符串返回给浏览器 
+浏览器解析html快速显示内容 
+浏览器下载执行JS Bundle 
+js执行时接管已有dom进行事件绑定和响应式处理 */
+//6.preload和prefetch
+/* preload预下载 首屏大图 关键css文件 首屏依赖的js 字体文件
+立即下载 高优先级 同普通资源缓存 用在首屏关键资源
+prefetch预获取
+空闲下载 低优先级 磁盘缓存 用在下个页面资源 */
